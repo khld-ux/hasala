@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حصالتي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0c;--card:#151517;--tx:#f4f2ee;--mut:#8b8b90;--ac:#f4f2ee;--on:#0b0b0c;--ok:#a9d8b8;--bad:#e5867a;--bd:#26262a;--mid:#4a4a50;--fld:#101012;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f3f2ee;--card:#fff;--tx:#0e0e10;--mut:#77777c;--ac:#0e0e10;--on:#f3f2ee;--ok:#2f7a4d;--bad:#c4473a;--bd:#e0dfd9;--mid:#c9c8c2;--fld:#f3f2ee;color-scheme:light}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Cairo",system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;max-width:480px;margin-inline:auto;padding:20px 16px 40px}
+h1{font-size:30px;font-weight:900;letter-spacing:-.5px;margin:6px 0 18px;line-height:1}
+h1 small{display:block;font-size:11px;font-weight:600;letter-spacing:3px;color:var(--mut);margin-bottom:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;padding:4px;background:var(--card);border:1px solid var(--bd);border-radius:999px}
+.tabs button{flex:1;padding:10px;border:0;background:transparent;color:var(--mut);border-radius:999px;font-size:14px;font-weight:800;font-family:inherit;transition:.2s}
+.tabs button.on{background:var(--ac);color:var(--on)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:18px;margin-bottom:12px}
+label{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:14px 0 6px}
+label:first-child{margin-top:0}
+input,select{width:100%;padding:13px 14px;border:1px solid var(--bd);border-radius:14px;background:var(--fld);color:var(--tx);font-size:17px;font-weight:600;font-family:inherit;outline:none;transition:border-color .2s}
+input:focus,select:focus{border-color:var(--tx)}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.chk{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:14px;font-weight:600}.chk input{width:20px;height:20px;padding:0;accent-color:var(--ac)}
+.big{font-size:56px;font-weight:900;margin:2px 0;line-height:1.1;letter-spacing:-2px}
+.mut{color:var(--mut);font-size:12px;font-weight:600}
+.bar{height:6px;background:var(--bd);border-radius:6px;overflow:hidden;margin:14px 0 8px}
+.bar i{display:block;height:100%;background:var(--ac);width:0;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.btn{width:100%;padding:15px;border:0;border-radius:999px;background:var(--ac);color:var(--on);font-size:16px;font-weight:800;font-family:inherit;margin-top:14px;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.split{display:flex;height:8px;border-radius:8px;overflow:hidden;margin:12px 0 8px;gap:2px}
+.split b{display:block;height:100%;border-radius:8px}
+.li{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bd);font-size:14px;font-weight:600}
+.li:last-child{border:0}
+.hide{display:none}
+#res b{font-weight:800}
+</style>
+</head>
+<body>
+<h1><small>SAVE / حوّش</small>حصالتي</h1>
+<div class="tabs"><button id="t1" class="on" onclick="tab(1)">الخطة</button><button id="t2" onclick="tab(2)">الحصالة</button></div>
+
+<div id="p1">
+<div class="card">
+<label>دخلك كام؟</label>
+<div class="row"><input id="inc" type="number" inputmode="decimal" placeholder="مثلا 8000" oninput="calc()"><select id="freq" onchange="calc()"><option value="1">في اليوم</option><option value="7">في الأسبوع</option><option value="30" selected>في الشهر</option></select></div>
+<label>مصروفك الشخصي (كل ما تصرفه على نفسك لنفس الفترة)</label>
+<input id="sp" type="number" inputmode="decimal" placeholder="مثلا 5000" oninput="calc()">
+<label>عايز تحوش كام؟ (اختياري)</label>
+<input id="goal" type="number" inputmode="decimal" placeholder="سيبه فاضي لو مفيش هدف" oninput="calc()">
+<div class="chk"><input id="open" type="checkbox" onchange="calc()"><span>مدة مفتوحة (من غير مدة محددة)</span></div>
+<div id="durbox">
+<label>في كام؟</label>
+<div class="row"><input id="dur" type="number" inputmode="decimal" placeholder="مثلا 6" oninput="calc()"><select id="du" onchange="calc()"><option value="1">يوم</option><option value="7">أسبوع</option><option value="30" selected>شهر</option></select></div>
+</div>
+</div>
+<div class="card" id="res"></div>
+<button class="btn" onclick="savePlan()">احفظ الخطة وابدأ الحوش</button>
+</div>
+
+<div id="p2" class="hide">
+<div class="card">
+<div class="mut">رصيد الحصالة</div>
+<div class="big" id="bal">0</div>
+<div id="gp" class="hide"><div class="bar"><i id="gb"></i></div><div class="mut" id="gt"></div></div>
+<label>المبلغ</label>
+<input id="amt" type="number" inputmode="decimal" placeholder="كام؟">
+<div class="row"><button class="btn" onclick="tx(1)">حوّش</button><button class="btn s" onclick="tx(-1)">اسحب</button></div>
+</div>
+<div class="card"><b>آخر العمليات</b><div id="log" class="mut" style="margin-top:6px">لسه مفيش عمليات</div></div>
+<button class="btn s" id="wipe" onclick="wipeData()">مسح كل البيانات</button>
+</div>
+
+<script>
+var S={inc:0,freq:30,sp:0,goal:0,open:true,dur:0,du:30,bal:0,log:[]};
+var $=function(i){return document.getElementById(i)};
+var N=function(n){return Math.round(n).toLocaleString('en-US')};
+var FN={1:'يوم',7:'أسبوع',30:'شهر'},FP={1:'يوميا',7:'أسبوعيا',30:'شهريا'};
+function load(){try{var v=localStorage.getItem('hasala');if(v)S=Object.assign(S,JSON.parse(v))}catch(e){}}
+function store(){try{localStorage.setItem('hasala',JSON.stringify(S))}catch(e){}}
+function tab(n){$('p1').classList.toggle('hide',n!=1);$('p2').classList.toggle('hide',n!=2);$('t1').className=n==1?'on':'';$('t2').className=n==2?'on':'';if(n==2)draw()}
+function read(){S.inc=+$('inc').value||0;S.freq=+$('freq').value;S.sp=+$('sp').value||0;S.goal=+$('goal').value||0;S.open=$('open').checked;S.dur=+$('dur').value||0;S.du=+$('du').value}
+function calc(){
+read();$('durbox').classList.toggle('hide',S.open||!S.goal);
+var f=S.freq,avail=S.inc-S.sp,h='';
+if(!S.inc){$('res').innerHTML='<span class="mut">اكتب دخلك ومصروفك وأنا أحسبلك كل حاجة</span>';return}
+var sp=Math.min(100,S.sp/S.inc*100),sv=Math.max(0,100-sp);
+if(avail<0){h+='<div class="bad"><b>مصروفك أكتر من دخلك بـ '+N(-avail)+' '+FP[f].replace('ا','')+'!</b><br>لازم تقلل المصروف قبل ما تحوش.</div>';$('res').innerHTML=h;return}
+var perDay=avail/f;
+h+='<div class="mut">المتاح للحوش '+FP[f]+'</div><div class="big">'+N(avail)+'</div>';
+h+='<div class="split"><b style="width:'+sp+'%;background:var(--mid)"></b><b style="width:'+sv+'%;background:var(--ac)"></b></div>';
+h+='<div class="mut">مصروف '+N(sp)+'% • حوش '+N(sv)+'%</div>';
+h+='<div style="margin-top:10px">';
+if(S.goal>0&&!S.open&&S.dur>0){
+ var days=S.dur*S.du,periods=days/f,need=S.goal/periods;
+ h+='عشان توصل <b>'+N(S.goal)+'</b> في '+S.dur+' '+FN[S.du]+' لازم تحوش <b>'+N(need)+'</b> '+FP[f]+' (حوالي '+N(S.goal/days)+' في اليوم).<br>';
+ if(avail>=need)h+='<span class="ok">تقدر توصل، وهيفضلك زيادة '+N(avail-need)+' '+FP[f]+'.</span>';
+ else{var m=S.goal/perDay;h+='<span class="bad">ناقصك '+N(need-avail)+' '+FP[f]+'. قلل مصروفك بالمبلغ ده، أو زود المدة لحوالي '+(m>=60?N(m/30)+' شهر':N(m)+' يوم')+'.</span>'}
+}else if(S.goal>0){
+ var d=S.goal/perDay;h+='بالمعدل ده هتوصل <b>'+N(S.goal)+'</b> بعد حوالي <b>'+(d>=60?N(d/30)+' شهر':N(d)+' يوم')+'</b>.';
+}else{
+ h+='حوش مفتوح من غير هدف ';
+}
+h+='</div><div class="mut" style="margin-top:10px">في اليوم '+N(perDay)+' • في الأسبوع '+N(perDay*7)+' • في الشهر '+N(perDay*30)+' • في السنة '+N(perDay*365)+'</div>';
+$('res').innerHTML=h}
+function savePlan(){read();store();tab(2)}
+function draw(){
+$('bal').textContent=N(S.bal);
+$('gp').classList.toggle('hide',!(S.goal>0));
+if(S.goal>0){var p=Math.min(100,S.bal/S.goal*100);$('gb').style.width=p+'%';$('gt').textContent=N(p)+'% من '+N(S.goal)+(S.bal>=S.goal?' وصلت للهدف!':' • فاضل '+N(S.goal-S.bal))}
+var l=S.log.slice(-10).reverse();
+$('log').innerHTML=l.length?l.map(function(x){return '<div class="li"><span>'+x.d+'</span><b class="'+(x.a>0?'ok':'bad')+'">'+(x.a>0?'+':'')+N(x.a)+'</b></div>'}).join(''):'لسه مفيش عمليات'}
+function tx(s){var a=+$('amt').value;if(!a||a<=0)return;if(s<0&&a>S.bal)a=S.bal;if(!a)return;
+S.bal+=s*a;S.log.push({a:s*a,d:new Date().toLocaleDateString('ar-EG',{day:'numeric',month:'short'})});$('amt').value='';store();draw()}
+var wt=null;
+function wipeData(){var b=$('wipe');if(!wt){b.textContent='متأكد؟ اضغط تاني للمسح';b.style.color='var(--bad)';wt=setTimeout(function(){wt=null;b.textContent='مسح كل البيانات';b.style.color=''},4000);return}
+clearTimeout(wt);wt=null;b.textContent='مسح كل البيانات';b.style.color='';
+S={inc:0,freq:30,sp:0,goal:0,open:true,dur:0,du:30,bal:0,log:[]};store();fill();calc();draw()}
+function fill(){$('inc').value=S.inc||'';$('freq').value=S.freq;$('sp').value=S.sp||'';$('goal').value=S.goal||'';$('open').checked=S.open;$('dur').value=S.dur||'';$('du').value=S.du}
+load();fill();calc();if(S.inc)tab(2);
+</script>
+</body>
+</html>
